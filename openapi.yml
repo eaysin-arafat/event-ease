@@ -1,0 +1,245 @@
+openapi: 3.0.1
+info:
+  title: EventEase API
+  description: API documentation for the EventEase platform, managing events and attendees with real-time updates.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local Development Server
+
+tags:
+  - name: Auth
+    description: Endpoints for user registration and login.
+  - name: Events
+    description: Endpoints for event management.
+  - name: Attendees
+    description: Endpoints for attendee registration.
+
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: User registration
+      description: Register a new user with email and password.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  example: password123
+      responses:
+        201:
+          description: User registered successfully.
+        400:
+          description: Invalid input or user already exists.
+
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: User login
+      description: Login a user using email and password.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  example: password123
+      responses:
+        200:
+          description: Login successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1...
+        401:
+          description: Invalid credentials.
+
+  /events:
+    post:
+      tags:
+        - Events
+      summary: Create an event
+      description: Create a new event.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Tech Conference 2025
+                date:
+                  type: string
+                  format: date-time
+                  example: 2025-02-15T10:00:00Z
+                location:
+                  type: string
+                  example: Virtual
+                maxAttendees:
+                  type: integer
+                  example: 100
+      responses:
+        201:
+          description: Event created successfully.
+        400:
+          description: Invalid input.
+
+    get:
+      tags:
+        - Events
+      summary: List all events
+      description: Retrieve a list of all events.
+      responses:
+        200:
+          description: A list of events.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: 60d5f4818f8b7c15e4eb4732
+                    name:
+                      type: string
+                      example: Tech Conference 2025
+                    date:
+                      type: string
+                      format: date-time
+                      example: 2025-02-15T10:00:00Z
+                    location:
+                      type: string
+                      example: Virtual
+                    maxAttendees:
+                      type: integer
+                      example: 100
+                    attendeesCount:
+                      type: integer
+                      example: 50
+                    createdBy:
+                      type: string
+                      example: 60d5f4818f8b7c15e4eb4731
+
+  /events/{eventId}:
+    patch:
+      tags:
+        - Events
+      summary: Update an event
+      description: Update the details of an event.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 60d5f4818f8b7c15e4eb4732
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Updated Event Name
+                date:
+                  type: string
+                  format: date-time
+                  example: 2025-03-01T12:00:00Z
+                location:
+                  type: string
+                  example: Hybrid
+                maxAttendees:
+                  type: integer
+                  example: 150
+      responses:
+        200:
+          description: Event updated successfully.
+        404:
+          description: Event not found.
+
+    delete:
+      tags:
+        - Events
+      summary: Delete an event
+      description: Delete an event by ID.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 60d5f4818f8b7c15e4eb4732
+      responses:
+        200:
+          description: Event deleted successfully.
+        404:
+          description: Event not found.
+
+  /attendees/register:
+    post:
+      tags:
+        - Attendees
+      summary: Register for an event
+      description: Register an authenticated user for an event.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                eventId:
+                  type: string
+                  example: 60d5f4818f8b7c15e4eb4732
+      responses:
+        201:
+          description: Successfully registered.
+        400:
+          description: Event is at full capacity or invalid request.
+        404:
+          description: Event not found.
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
