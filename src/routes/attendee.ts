@@ -1,4 +1,4 @@
-import { registerAttendee } from "@/api/attendee-controller";
+import { registerAttendee } from "@/api/attendee";
 import express from "express";
 
 const attendeesRoutes = express.Router();

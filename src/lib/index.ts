@@ -1,8 +1,4 @@
 export * as authenticateService from "@/lib/auth";
-export * as departmentsService from "@/lib/departments";
-export * as employeeService from "@/lib/employees";
-export * as permissionsService from "@/lib/permissions";
-export * as rolePermissionsService from "@/lib/role-permissions";
-export * as rolesService from "@/lib/roles";
+export * as eventService from "@/lib/event";
 export * as tokenService from "@/lib/tokens";
 export * as userService from "@/lib/users";

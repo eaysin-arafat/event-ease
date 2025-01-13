@@ -1,9 +1,9 @@
-import { createEvent, getEvents } from "@/api/event-controller";
+import { eventControllers } from "@/api";
 import express from "express";
 
 const eventRoutes = express.Router();
 
-eventRoutes.post("/", createEvent);
-eventRoutes.get("/", getEvents);
+eventRoutes.post("/", eventControllers?.create);
+eventRoutes.get("/", eventControllers?.getAll);
 
 export default eventRoutes;

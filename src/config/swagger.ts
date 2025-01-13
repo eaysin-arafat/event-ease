@@ -8,7 +8,7 @@ import swaggerUi from "swagger-ui-express";
 export const setupSwagger = (app: Application) => {
   if (env.NODE_ENV !== "development") return;
 
-  const SWAGGER_YAML_FILEPATH = path.join(__dirname, "../openapi.yml");
+  const SWAGGER_YAML_FILEPATH = path.join(__dirname, "../../openapi.yml");
   const swaggerYaml = yaml.load(
     fs.readFileSync(SWAGGER_YAML_FILEPATH, "utf8")
   ) as object;

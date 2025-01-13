@@ -3,9 +3,8 @@ import User from "@/models/User";
 import { hashPassword } from "@/utils/hash";
 import { userExists } from "./utils";
 
-export const createUser = async (email: string, password: string) => {
+const create = async (email: string, password: string) => {
   const existingUser = await userExists(email);
-
   if (existingUser) throw new DuplicateKeyError("User", "email");
 
   const hashedPassword = await hashPassword(password);
@@ -17,5 +16,7 @@ export const createUser = async (email: string, password: string) => {
 
   await newUser.save();
 
-  return newUser;
+  return newUser?.toObject();
 };
+
+export { create };
