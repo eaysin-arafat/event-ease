@@ -1,205 +1,171 @@
-# Sync-Workbench API
+# EventEase - Event Management Platform
 
-Sync-Workbench is a powerful workforce management solution designed to streamline and optimize employee operations. This API serves as the backend for managing employees, projects, and overall performance.
+EventEase is a web application for seamless event management. Users can create and manage events, register for them, and receive real-time updates about attendee registrations and event modifications.
 
 ## Features
 
-- **Role-Based Access Control (RBAC):** Define and manage roles (Admin, Manager, Employee, HR) with fine-grained permissions.
-- **Advanced Reporting & Analytics:** Generate reports on employee performance, attendance, and project involvement.
-- **Employee Performance Management:** Tools for goal setting, tracking, and evaluations with 360-degree feedback.
-- **Automated Onboarding & Offboarding:** Streamlined workflows for onboarding/offboarding employees.
-- **Time & Attendance Tracking:** Real-time attendance integration with leave and shift management.
-- **Project & Task Management Integration:** Assign projects, track tasks, and integrate with tools like Jira, Trello, etc.
-- **Skill & Certification Management:** Maintain skill databases, certification tracking, and renewal reminders.
-- **Internal Communication Tools:** Messaging, video conferencing, and collaboration spaces.
-- **Comprehensive Employee Profiles:** Profiles with personal info, job history, skills, and custom fields.
-- **Compliance & Document Management:** Secure storage for contracts, NDAs, and audit trails.
-- **Payroll & Benefits Management:** Payroll processing with tax calculations, benefits, and bonuses.
-- **Employee Self-Service Portal:** Self-service for personal info updates, leave requests, and pay slips.
-- **Custom Workflow Automation:** Automate repetitive tasks like leave approvals and expense claims.
-- **Multi-Department & Location Support:** Manage employees across multiple departments and locations.
-- **Integration with HR & IT Systems:** APIs for seamless integration with existing systems.
-- **Data Security & Privacy:** Robust encryption, role-based access, and GDPR compliance.
-- **Customization & Scalability:** Customizable dashboards, workflows, and scalable architecture.
+### Backend Features:
 
----
+#### User Authentication:
 
-## I. Installation
+- Users can register and log in using their email and password.
+- Secure API endpoints to allow only authenticated users to create or register for events.
 
-**Using `curl`**
+#### Event Management:
+
+- API endpoints to create, update, and delete events, including event details like:
+  - Name
+  - Date
+  - Location
+  - Max Attendees
+  - Created By
+
+#### Attendee Registration:
+
+- Users can register for events with a limitation based on the event’s maximum number of attendees.
+
+#### Real-time Updates:
+
+- Socket.IO integration to provide real-time updates for:
+  - New attendee registrations
+  - Event updates or when the event reaches full capacity
+
+## Installation
+
+### 1. Clone the Repository
 
 ```bash
-<(curl -s https://raw.githubusercontent.com/eaysin-arafat/sync-workbench-api/main/scripts/setup.sh)
+git clone https://github.com/your-username/event-ease.git
+cd event-ease
 ```
 
-**Manual Method**
-1. Clone the repository:
+### 2. Install Dependencies
 
-   ```bash
-   git clone https://github.com/eaysin-arafat/sync-workbench-api.git
-   cd sync-workbench-api
-   ```
+Using Yarn:
 
-2. Install dependencies:
+```bash
+yarn install
+```
 
-   ```bash
-   yarn install
-   ```
+or using NPM:
 
-## II. Configuration
+```bash
+npm install
+```
 
-1. Create a .env file in the root directory:
-   ```bash
-   cp .env.example .env
-   ```
-2. Update the environment variables in .env:
-   ```dotenv
-   NODE_ENV="development"
-   PORT="3000"
-   DB_CONNECTION_URL="mongodb+srv://<your-username>:<your-password>@cluster.mongodb.net/"
-   ACCESS_TOKEN_SECRET="<your-access-token-secret>"
-   REFRESH_TOKEN_SECRET="<your-refresh-token-secret>"
-   ACCESS_TOKEN_EXPIRATION="15m"
-   REFRESH_TOKEN_EXPIRATION="7d"
-   ```
+### 3. Set Up Environment Variables
 
-## III. Development
+Create a .env file in the root directory with the following environment variables:
 
-Start the development server
+```bash
+NODE_ENV="development"
+PORT="4000"
+DB_CONNECTION_URL="mongodb+srv://eaysinarafat:XB4siJQheDWOCmV2@cluster0.lwys0.mongodb.net/event-ease?retryWrites=true&w=majority"
+DB_NAME="event-ease"
+DB_USERNAME="eaysin-arafat"
+DB_PASSWORD="XB4siJQheDWOCmV2"
+APPLICATION_NAME="Event-Ease"
+JWT_SECRET="441122f5a7bea277a33a39661225d63866bbc9a6cb7b5cc383c31c3"
+JWT_EXPIRATION="1d"
+```
+
+### 4. Run the Project
+
+For development:
 
 ```bash
 yarn dev
 ```
 
-This command starts the API server and a MongoDB container using docker-compose.
-
-- 🌏 API Server: http://localhost:3000
-- ⚙️ Swagger UI: http://localhost:3000/dev/api-docs
-- 🛢️ MongoDB: mongodb://localhost:27017
-
-## IV. Deployment
-
-**Build and Run without Docker**
+For production build:
 
 ```bash
-yarn build && yarn start
+yarn build
+yarn start
 ```
 
-**Run with Docker**
+## Backend API Endpoints
+
+1. User Authentication
+   - `POST /api/auth/signup`: Register a new user.
+   - `POST /api/auth/login`: Login with email and password.
+   - `GET /api/auth/me`: Get the currently authenticated user.
+2. Event Management
+   - `POST /api/events`: Create a new event.
+   - `PUT /api/events/:id`: Update an existing event.
+   - `DELETE /api/events/`:id: Delete an event.
+   - `GET /api/events`: Get a list of all events.
+3. Attendee Registration
+   - `POST /api/events/:id/register`: Register for an event.
+4. Real-time Notifications
+   - Socket.IO: Real-time updates for attendee registrations and event modifications. Emit notifications when:
+     - A new attendee registers for an event.
+     - An event's details are updated or when the event reaches maximum capacity.
+
+## Project Structure
 
 ```bash
-Copy code
-docker build -t sync-workbench-api .
-docker run -t -i \
-  --env NODE_ENV=production \
-  --env DB_CONNECTION_URL=mongodb://host.docker.internal:27017/employees \
-  -p 3000:3000 \
-  sync-workbench-api
+    .
+    ├── .env                    # Environment configuration
+    ├── .gitignore               # Git ignore file
+    ├── README.md                # Project documentation
+    ├── jest.config.js           # Jest configuration
+    ├── openapi.yml              # API documentation using Swagger (OpenAPI)
+    ├── package.json             # Project dependencies and scripts
+    ├── project_structure.txt    # Project structure details
+    ├── public                   # Static files
+    │   ├── api-docs             # Swagger API docs
+    │   ├── index.html           # Frontend entry point
+    ├── src                      # Source code
+    │   ├── api                  # API route handlers
+    │   ├── app.ts               # Application setup
+    │   ├── config               # Configuration files
+    │   ├── database             # Database connection logic
+    │   ├── errors               # Custom error classes
+    │   ├── lib                  # Business logic
+    │   ├── middleware           # Middlewares (authentication, error handling)
+    │   ├── models               # Mongoose models
+    │   ├── routes               # API routes definitions
+    │   ├── schemas              # Validation schemas (Zod)
+    │   ├── sockets              # Real-time socket event handlers
+    │   ├── types                # TypeScript types
+    │   └── utils                # Utility functions
+    ├── tsconfig.json            # TypeScript configuration
+    └── yarn.lock                # Yarn lock file
 ```
 
-**Run with Docker Compose**
+## Technologies Used
+
+- Express: Web framework for Node.js.
+- Socket.IO: For real-time communication.
+- Mongoose: ODM for MongoDB.
+- JWT (JSON Web Tokens): For secure authentication.
+- Zod: Schema validation.
+- Swagger UI Express: For API documentation.
+- BcryptJS/Bcrypt: For password hashing.
+
+## Running Tests
+
+To run tests, use the following command:
 
 ```bash
-Copy code
-docker-compose up
-```
-
-## Environment Variables
-
-To configure the application, create a `.env` file in the root directory and copy the contents of `.env.default` as a starting point.
-
-Below are the available environment variables and their descriptions:
-
-| Variable Name              | Type   | Default Value                                              | Description                                              |
-| -------------------------- | ------ | ---------------------------------------------------------- | -------------------------------------------------------- |
-| `NODE_ENV`                 | string | `development`                                              | API runtime environment (e.g., `staging`, `production`). |
-| `PORT`                     | number | `3000`                                                     | The port on which the API server runs.                   |
-| `DB_CONNECTION_URL`        | string | `mongodb+srv://eaysinarafat:password@cluster.mongodb.net/` | MongoDB connection string.                               |
-| `DB_USERNAME`              | string | `eaysinarafat`                                             | Username for MongoDB authentication.                     |
-| `DB_PASSWORD`              | string | `password`                                                 | Password for MongoDB authentication.                     |
-| `APPLICATION_NAME`         | string | `sync-workbench`                                           | Name of the application.                                 |
-| `ACCESS_TOKEN_SECRET`      | string | `your-access-token-secret`                                 | Secret key used for signing JWT access tokens.           |
-| `REFRESH_TOKEN_SECRET`     | string | `your-refresh-token-secret`                                | Secret key used for signing JWT refresh tokens.          |
-| `ACCESS_TOKEN_EXPIRATION`  | string | `15m`                                                      | Expiration time for access tokens (e.g., `15m`, `1h`).   |
-| `REFRESH_TOKEN_EXPIRATION` | string | `7d`                                                       | Expiration time for refresh tokens (e.g., `7d`).         |
-
-### Notes:
-
-- Ensure that sensitive information like `DB_PASSWORD` and token secrets are kept secure and not exposed in your codebase.
-- Use environment-specific `.env` files for different deployment environments (e.g., `.env.staging`, `.env.production`).
-
-## Logging
-
-The application uses Winston for logging. Logs are saved in ./logs and in /logs within the Docker container.
-
-- Prettified console logs for development.
-- JSON-structured logs for production.
-
-### Directory Structure
-
-```
-+-- scripts
-|   +-- dev.sh
-|   +-- setup-github-actions.sh
-+-- src
-|   +-- controllers
-|   |   +-- book
-|   |   |   +-- add.ts
-|   |   |   +-- all.ts
-|   |   |   +-- get.ts
-|   |   |   +-- index.ts
-|   |   |   +-- remove.ts
-|   |   |   +-- search.ts
-|   +-- errors
-|   |   +-- application-error.ts
-|   |   +-- bad-request.ts
-|   +-- lib
-|   |   +-- safe-mongo-connection.ts
-|   |   +-- winston-console-transport.ts
-|   +-- middleware
-|   |   +-- request-middleware.ts
-|   +-- models
-|   |   +-- Book.ts
-|   +-- public
-|   |   +-- index.html
-|   +-- app.ts
-|   +-- logger.ts
-|   +-- routes.ts
-|   +-- server.ts
-+-- .env.default
-+-- .gitignore
-+-- .gitpod.yml
-+-- docker-compose.dev.yml
-+-- docker-compose.yml
-+-- Dockerfile
-+-- jest.config.js
-+-- LICENSE
-+-- nodemon.json
-+-- openapi.yml
-+-- package.json
-+-- README.md
-+-- renovate.json
-+-- tsconfig.json
-+-- yarn.lock
-```
-
-## Testing
-
-Run tests using Jest:
-
-```bash
-Copy code
 yarn test
 ```
 
+## OpenAPI Documentation
+
+For detailed API documentation, you can refer to the OpenAPI YAML file.
+
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Contributing
+## Eaysin Arafat
 
-Feel free to submit issues or pull requests on GitHub.
+Developer at EventEase
 
-## Contact
+### Explanation:
 
-For queries, please reach out to Eaysin Arafat via the repository's issue tracker.
+- **OpenAPI YAML**: The OpenAPI file is mentioned as a link (`openapi.yml`) in the README for easy reference.
+- **Project Details**: The structure and installation instructions are clearly stated for users and developers.
+- **Technologies Used**: Lists the core technologies powering the backend.
