@@ -60,10 +60,10 @@ Create a .env file in the root directory with the following environment variable
 ```bash
 NODE_ENV="development"
 PORT="4000"
-DB_CONNECTION_URL="mongodb+srv://eaysinarafat:XB4siJQheDWOCmV2@cluster0.lwys0.mongodb.net/event-ease?retryWrites=true&w=majority"
+DB_CONNECTION_URL="mongodb+srv://username:password@cluster0.lwys0.mongodb.net/event-ease?retryWrites=true&w=majority"
 DB_NAME="event-ease"
-DB_USERNAME="eaysin-arafat"
-DB_PASSWORD="XB4siJQheDWOCmV2"
+DB_USERNAME="username"
+DB_PASSWORD="password"
 APPLICATION_NAME="Event-Ease"
 JWT_SECRET="441122f5a7bea277a33a39661225d63866bbc9a6cb7b5cc383c31c3"
 JWT_EXPIRATION="1d"
