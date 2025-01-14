@@ -1,8 +1,12 @@
 openapi: 3.0.1
 info:
   title: EventEase API
-  description: API documentation for the EventEase platform, managing events and attendees with real-time updates.
   version: 1.0.0
+  description: API documentation for the EventEase platform, managing events and attendees with real-time updates.
+  contact:
+    name: Eaysin Arafat
+    url: https://eaysin-arafat.vercel.app/
+    email: eaysin.arafat.j@gmail.com
 servers:
   - url: http://localhost:4000/api/v1
     description: Local Development Server
@@ -38,10 +42,30 @@ paths:
                   format: password
                   example: password123
       responses:
-        201:
-          description: User registered successfully.
-        400:
-          description: Invalid input or user already exists.
+        "201":
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Login successful
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        "400":
+          $ref: "#/components/responses/400"
 
   /auth/login:
     post:
@@ -243,3 +267,237 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+
+  responses:
+    "400":
+      description: Bad Request Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: "error"
+              statusCode:
+                type: integer
+                example: 400
+              error:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: "BAD_REQUEST"
+                  message:
+                    type: string
+                    example: "Bad request"
+                  details:
+                    type: object
+                  timestamp:
+                    type: string
+                    example: "2024-11-01T12:34:56Z"
+                  path:
+                    type: string
+                    example: "/api/v1/resource"
+                  suggestion:
+                    type: string
+                    example: "Please check your request and try again."
+    "401":
+      description: Unauthorized Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: "error"
+              statusCode:
+                type: integer
+                example: 401
+              error:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: "UNAUTHORIZED"
+                  message:
+                    type: string
+                    example: "Unauthorized access"
+                  details:
+                    type: object
+                  timestamp:
+                    type: string
+                    example: "2024-11-01T12:34:56Z"
+                  path:
+                    type: string
+                    example: "/api/v1/protected-resource"
+                  suggestion:
+                    type: string
+                    example: "Please login to access this resource."
+    "403":
+      description: Forbidden Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: "error"
+              statusCode:
+                type: integer
+                example: 403
+              error:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: "FORBIDDEN"
+                  message:
+                    type: string
+                    example: "Forbidden access"
+                  details:
+                    type: object
+                  timestamp:
+                    type: string
+                    example: "2024-11-01T12:34:56Z"
+                  path:
+                    type: string
+                    example: "/api/v1/restricted-resource"
+                  suggestion:
+                    type: string
+                    example: "Check your permissions and try again."
+    "404":
+      description: Not Found Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: "error"
+              statusCode:
+                type: integer
+                example: 404
+              error:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: "NOT_FOUND"
+                  message:
+                    type: string
+                    example: "Resource not found"
+                  details:
+                    type: object
+                  timestamp:
+                    type: string
+                    example: "2024-11-01T12:34:56Z"
+                  path:
+                    type: string
+                    example: "/api/v1/non-existent-resource"
+                  suggestion:
+                    type: string
+                    example: "Ensure the resource ID is correct."
+    "409":
+      description: Conflict Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: "error"
+              statusCode:
+                type: integer
+                example: 409
+              error:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: "CONFLICT"
+                  message:
+                    type: string
+                    example: "Conflict occurred while processing the request"
+                  details:
+                    type: object
+
+                  timestamp:
+                    type: string
+                    example: "2024-11-01T12:34:56Z"
+                  path:
+                    type: string
+                    example: "/api/v1/resource"
+                  suggestion:
+                    type: string
+                    example: "Try a different resource or modify your request."
+    "415":
+      description: Unsupported Media Type Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: "error"
+              statusCode:
+                type: integer
+                example: 415
+              error:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: "UNSUPPORTED_MEDIA_TYPE"
+                  message:
+                    type: string
+                    example: "Unsupported media type"
+                  details:
+                    type: object
+                  timestamp:
+                    type: string
+                    example: "2024-11-01T12:34:56Z"
+                  path:
+                    type: string
+                    example: "/api/v1/resource"
+                  suggestion:
+                    type: string
+                    example: "Ensure the Content-Type is correct."
+    "500":
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: "error"
+              statusCode:
+                type: integer
+                example: 500
+              error:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: "INTERNAL_SERVER_ERROR"
+                  message:
+                    type: string
+                    example: "Internal server error"
+                  details:
+                    type: object
+                  timestamp:
+                    type: string
+                    example: "2024-11-01T12:34:56Z"
+                  path:
+                    type: string
+                    example: "/api/v1/some-resource"
+                  suggestion:
+                    type: string
+                    example: "Please try again later."

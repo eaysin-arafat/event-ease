@@ -1,3 +1,4 @@
+import InternalServerError from "@/errors/internal-server-error";
 import Event, { IEvent } from "@/models/Event";
 
 /**
@@ -9,6 +10,6 @@ export const getAll = async (): Promise<IEvent[]> => {
     const events = await Event.find().populate("createdBy", "email");
     return events;
   } catch (err) {
-    throw new Error("Error fetching events");
+    throw new InternalServerError();
   }
 };

@@ -3,7 +3,6 @@ import AuthenticationError from "@/errors/authentication-error";
 import InternalServerError from "@/errors/internal-server-error";
 import dotenv from "dotenv";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { AccessTokenPayload, RefreshTokenPayload } from "./types";
 
 dotenv.config();
 
@@ -11,22 +10,22 @@ const JWT_SECRET = env.JWT_SECRET || "access-secret";
 const JWT_EXPIRATION = env.JWT_EXPIRATION || "15m";
 
 interface GenerateTokenOptions {
-  type: "AccessToken" | "RefreshToken";
-  payload: AccessTokenPayload | RefreshTokenPayload;
+  payload: string;
   algorithm?: jwt.Algorithm;
   secret?: string;
-  expiresIn?: string | number;
+  expiresIn?: string;
 }
 
 const generateToken = ({
-  type = "AccessToken",
   payload,
   algorithm = "HS256",
   secret = JWT_SECRET,
   expiresIn = JWT_EXPIRATION,
 }: GenerateTokenOptions): string => {
+  const tokenPayload = typeof payload === "string" ? { id: payload } : payload;
+
   try {
-    return jwt.sign(payload, secret, {
+    return jwt.sign(tokenPayload, secret, {
       algorithm,
       expiresIn,
     });
@@ -52,22 +51,18 @@ const decodeToken = ({ token }: DecodeTokenOptions): JwtPayload | null => {
 
 // Define the options for verifying the token
 interface VerifyTokenOptions {
-  type: "AccessToken" | "RefreshToken";
   token: string;
   algorithm?: jwt.Algorithm;
   secret?: string;
 }
 
 const verifyToken = ({
-  type,
   token,
   algorithm = "HS256",
   secret = JWT_SECRET,
-}: VerifyTokenOptions): AccessTokenPayload | RefreshTokenPayload => {
+}: VerifyTokenOptions) => {
   try {
-    return jwt.verify(token, secret, { algorithms: [algorithm] }) as
-      | AccessTokenPayload
-      | RefreshTokenPayload;
+    return jwt.verify(token, secret, { algorithms: [algorithm] });
   } catch (error) {
     console.log("[JWT]", error);
     throw new AuthenticationError();

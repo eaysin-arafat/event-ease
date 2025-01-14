@@ -1,14 +1,14 @@
 import { eventService } from "@/lib";
 import { requestMiddleware } from "@/middleware/request-middleware";
 import { eventSchema } from "@/schemas/event";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
-const createEvent = async (req: Request, res: Response) => {
+const createEvent = async (req: Request, res: Response, next: NextFunction) => {
   const { name, date, location, maxAttendees } = req.body;
   const createdBy = req.user?.userId;
 
   try {
-    const newEvent = eventService?.create(
+    const newEvent = await eventService?.create(
       name,
       date,
       location,
@@ -16,9 +16,16 @@ const createEvent = async (req: Request, res: Response) => {
       createdBy
     );
 
-    res.status(201).json(newEvent);
+    const response = {
+      status: "success",
+      statusCode: 201,
+      message: "Event created successfully",
+      data: { event: newEvent },
+    };
+
+    res.status(201).json(response);
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    next(err);
   }
 };
 

@@ -14,7 +14,13 @@ const registerUser = async (
   try {
     const { token } = await register({ email, password });
 
-    res.status(201).json({ token });
+    const response = {
+      status: "success",
+      statusCode: 201,
+      message: "Login successful",
+      data: { token },
+    };
+    res.status(201).json(response);
   } catch (err) {
     next(err);
   }

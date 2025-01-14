@@ -1,7 +1,7 @@
 import BadRequest from "@/errors/bad-request-error";
 import { UserSchema } from "@/schemas/user";
 import { comparePassword } from "@/utils/hash";
-import { generateToken } from "@/utils/jwt";
+import { tokenService } from "..";
 import { findUserByEmail } from "../users/utils";
 
 /**
@@ -21,7 +21,7 @@ const login = async (data: UserSchema): Promise<string> => {
   const isMatch = await comparePassword(password, user.password);
   if (!isMatch) throw new BadRequest({ message: "Invalid credentials" });
 
-  return generateToken(user.id);
+  return tokenService?.generateToken({ payload: user.id });
 };
 
 export default login;

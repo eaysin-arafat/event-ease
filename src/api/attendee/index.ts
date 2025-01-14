@@ -20,9 +20,12 @@ export const registerAttendee = async (
 
     const { newAttendee } = await registerAttendeeService(eventId, userId, io);
 
-    res
-      .status(201)
-      .json({ message: "Successfully registered", attendee: newAttendee });
+    res.status(201).json({
+      status: "success",
+      statusCode: 201,
+      message: "Successfully registered",
+      data: { attendee: newAttendee },
+    });
   } catch (err) {
     next(err);
   }

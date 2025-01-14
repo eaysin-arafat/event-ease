@@ -1,4 +1,4 @@
-import { login } from "@/lib/auth";
+import { authenticateService } from "@/lib";
 import { requestMiddleware } from "@/middleware/request-middleware";
 import { userSchema } from "@/schemas/user";
 import { NextFunction, Request, Response } from "express";
@@ -11,9 +11,18 @@ const loginUser = async (
   const { email, password } = req.body;
 
   try {
-    const token = await login({ email, password });
+    const token = await authenticateService?.login({ email, password });
 
-    res.status(200).json({ token });
+    const response = {
+      status: "success",
+      statusCode: 200,
+      message: "Login successful",
+      data: {
+        token,
+      },
+    };
+
+    res.status(200).json(response);
   } catch (err) {
     next(err);
   }

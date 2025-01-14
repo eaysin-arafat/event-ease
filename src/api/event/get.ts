@@ -6,7 +6,14 @@ const getEvents = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const events = await eventService?.getAll();
 
-    res.status(200).json(events);
+    const response = {
+      status: "success",
+      statusCode: 200,
+      message: "Events fetched successfully",
+      data: { events },
+    };
+
+    res.status(200).json(response);
   } catch (err) {
     next(err);
   }

@@ -36,5 +36,5 @@ export const env = envSchema.parse({
 // Log success message in development mode
 if (env.NODE_ENV === "development") {
   console.log("Environment variables successfully loaded:");
-  console.log(env);
+  // console.log(env);
 }

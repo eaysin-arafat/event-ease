@@ -40,13 +40,13 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 // Setup Swagger (Development only)
 setupSwagger(app);
 
-// API routes
-app.use("/api/v1", routes);
-
 // Root route
 app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "..", "public", "index.html"));
 });
+
+// API routes
+app.use("/api/v1", routes);
 
 // Health check endpoint
 app.get("/health", (_req, res) => {
